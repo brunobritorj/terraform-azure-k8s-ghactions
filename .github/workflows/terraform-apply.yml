@@ -1,0 +1,52 @@
+name: 'Terraform GitHub Actions'
+on: [push]
+
+jobs:
+
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    env:
+      ARM_TENANT_ID:        ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID:  ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_CLIENT_ID:        ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET:    ${{ secrets.ARM_CLIENT_SECRET }}
+
+    steps:
+
+      - name: Terraform Instalation
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Terraform Init
+        run: |
+          terraform init \
+            -backend-config=resource_group_name=${{secrets.TFBACKENDRESOURCEGROUP}} \
+            -backend-config=storage_account_name=${{secrets.TFBACKENDSTORAGEACCOUNT}} \
+            -backend-config=container_name=${{secrets.TFBACKENDSTORAGECONTAINER}} \
+            -backend-config=key=${{secrets.TFBACKENDKEY}}
+        working-directory: src
+
+      - name: Terraform Plan
+        run: terraform plan -out tfplan
+        working-directory: src
+        env:
+          TF_VAR_azLocation:          ${{ secrets.TF_VAR_azLocation }}
+          TF_VAR_azResourceGroupName: ${{ secrets.TF_VAR_azResourceGroupName }}
+          TF_VAR_azAcrName:           ${{ secrets.TF_VAR_azAcrName }}
+          TF_VAR_azAksName:           ${{ secrets.TF_VAR_azAksName }}
+          TF_VAR_azAksNodeCount:      ${{ secrets.TF_VAR_azAksNodeCount }}
+          TF_VAR_azAksVmSize:         ${{ secrets.TF_VAR_azAksVmSize }}
+
+      - name: Terraform Apply
+        run: terraform apply tfplan
+        working-directory: src
+        env:
+          TF_VAR_azLocation:          ${{ secrets.TF_VAR_azLocation }}
+          TF_VAR_azResourceGroupName: ${{ secrets.TF_VAR_azResourceGroupName }}
+          TF_VAR_azAcrName:           ${{ secrets.TF_VAR_azAcrName }}
+          TF_VAR_azAksName:           ${{ secrets.TF_VAR_azAksName }}
+          TF_VAR_azAksNodeCount:      ${{ secrets.TF_VAR_azAksNodeCount }}
+          TF_VAR_azAksVmSize:         ${{ secrets.TF_VAR_azAksVmSize }}
