@@ -25,6 +25,7 @@ This repo builds the required infra to host an application based on containers.
 CI/CD file consumes a group var (aka Library) called "azure" with these variables:
 
 |Variable|Role|Description|
+|--|--|--|
 |ARM_TENANT_ID|Azure authentication|Tenant Id|
 |ARM_SUBSCRIPTION_ID|Azure authentication|Subscription Id|
 |ARM_CLIENT_ID|Azure authentication|Client Id|
