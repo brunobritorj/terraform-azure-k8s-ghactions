@@ -22,7 +22,7 @@ This repo builds the required infra to host an application based on containers.
 
 ## Variables
 
-CI/CD file consumes a group var (aka Library) called "azure" with these variables:
+CI/CD file consumes these variables from secrets:
 
 |Variable|Role|Description|
 |--|--|--|
